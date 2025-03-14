@@ -35,10 +35,14 @@ async function createTweet(content) {
     // HINT: https://web3js.readthedocs.io/en/v1.2.11/web3-eth-contract.html#methods-mymethod-send
     // use the "await" feature to wait for the function to finish execution
     // what is await? https://javascript.info/async-await
-    let sendTweet = await Twitter.methods.createTweet(content).send();
+    let sendTweet = await Twitter.methods
+      .createTweet(content)
+      .send({ from: userAddress });
+    console.log("New tweet created!");
+
     // 7️⃣ Uncomment the displayTweets function! PRETTY EASY 🔥
     // GOAL: reload tweets after creating a new tweet
-    // displayTweets(accounts[0]);
+    displayTweets(accounts[0]);
   } catch (error) {
     console.error("User rejected request:", error);
   }
@@ -52,6 +56,7 @@ async function displayTweets(userAddress) {
   // HINT: https://web3js.readthedocs.io/en/v1.2.11/web3-eth-contract.html#methods-mymethod-call
   // tempTweets = await YOUR CODE
   tweets = await Twitter.methods.getAllTweets(userAddress).call();
+  console.log("tweets ready!");
 
   // we do this so we can sort the tweets  by timestamp
   const tweets = [...tempTweets];
@@ -122,6 +127,10 @@ async function likeTweet(author, id) {
     // INPUT: author and id
     // GOAL: Save the like in the smart contract
     // HINT: don't forget to use await 😉 👇
+    let like = await Twitter.methods
+      .LikeTweet(author, id)
+      .send({ from: userAddress });
+    console.log("Tweet liked!!");
   } catch (error) {
     console.error("User rejected request:", error);
   }
@@ -136,6 +145,9 @@ function setConnected(address) {
   // 6️⃣ Call the displayTweets function with address as input
   // This is the function in the javascript code, not smart contract 😉
   // GOAL: display all tweets after connecting to metamask
+
+  let showTweets = displayTweets(address);
+  showTweets();
 }
 
 document
