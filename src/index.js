@@ -1,18 +1,24 @@
 import contractABI from "./abi.json";
 
 // 2️⃣ Set your smart contract address 👇
-const contractAddress = "";
+const contractAddress = "0x3d9b528BB366dc33Ba8d74fE806928f3B0f01B8d";
 
 let web3 = new Web3(window.ethereum);
 // 3️⃣ connect to the contract using web3
 // HINT: https://web3js.readthedocs.io/en/v1.2.11/web3-eth-contract.html#new-contract
 // let contract = YOUR CODE
 
+new web3.eth.Contract(contractABI, contractAddress);
+
 async function connectWallet() {
   if (window.ethereum) {
     // 1️⃣ Request Wallet Connection from Metamask
     // ANSWER can be found here: https://docs.metamask.io/wallet/get-started/set-up-dev-environment/
     // const accounts = YOUR CODE
+
+    const accounts = await window.ethereum.request({
+      method: "eth_requestAccounts",
+    });
 
     setConnected(accounts[0]);
   } else {
@@ -25,10 +31,11 @@ async function connectWallet() {
 async function createTweet(content) {
   const accounts = await web3.eth.getAccounts();
   try {
-    // 4️⃣ call the contract createTweet method in order to crete the actual TWEET
+    // 4️⃣ call the contract createTweet method in order to create the actual TWEET
     // HINT: https://web3js.readthedocs.io/en/v1.2.11/web3-eth-contract.html#methods-mymethod-send
     // use the "await" feature to wait for the function to finish execution
     // what is await? https://javascript.info/async-await
+    let sendTweet = await createTweet();
     // 7️⃣ Uncomment the displayTweets function! PRETTY EASY 🔥
     // GOAL: reload tweets after creating a new tweet
     // displayTweets(accounts[0]);
