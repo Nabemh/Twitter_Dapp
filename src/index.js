@@ -30,7 +30,7 @@ async function connectWallet() {
 async function createTweet(content) {
   const accounts = await web3.eth.getAccounts();
   try {
-    await Twitter.methods.createTweet(content).send({ from: accounts[0] });
+    await contract.methods.createTweet(content).send({ from: accounts[0] });
     displayTweets(accounts[0]);
   } catch (error) {
     console.error("User rejected request:", error);
@@ -41,7 +41,7 @@ async function displayTweets(userAddress) {
   const tweetsContainer = document.getElementById("tweetsContainer");
   const tempTweets = [];
   tweetsContainer.innerHTML = "";
-  tempTweets = await Twitter.methods.getAllTweets(userAddress).call();
+  tempTweets = await contract.methods.getAllTweets(userAddress).call();
   // we do this so we can sort the tweets  by timestamp
   const tweets = [...tempTweets];
   tweets.sort((a, b) => b.timestamp - a.timestamp);
@@ -107,7 +107,7 @@ function shortAddress(address, startLength = 6, endLength = 4) {
 
 async function likeTweet(author, id) {
   try {
-    await Twitter.methods.LikeTweet(author, id).send({ from: accounts[0] });
+    await contract.methods.LikeTweet(author, id).send({ from: accounts[0] });
   } catch (error) {
     console.error("User rejected request:", error);
   }
