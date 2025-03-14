@@ -12,13 +12,17 @@ new web3.eth.Contract(contractABI, contractAddress);
 
 async function connectWallet() {
   if (window.ethereum) {
-    // 1️⃣ Request Wallet Connection from Metamask
-    // ANSWER can be found here: https://docs.metamask.io/wallet/get-started/set-up-dev-environment/
-    // const accounts = YOUR CODE
-
-    const accounts = await window.ethereum.request({
-      method: "eth_requestAccounts",
-    });
+    const accounts = await window.ethereum
+      .request({ method: "eth_requestAccounts" })
+      .catch((err) => {
+        if (err.code === 4001) {
+          // EIP-1193 userRejectedRequest error.
+          // If this happens, the user rejected the connection request.
+          console.log("Please connect to MetaMask.");
+        } else {
+          console.error(err);
+        }
+      });
 
     setConnected(accounts[0]);
   } else {
