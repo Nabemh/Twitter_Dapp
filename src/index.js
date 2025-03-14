@@ -35,7 +35,7 @@ async function createTweet(content) {
     // HINT: https://web3js.readthedocs.io/en/v1.2.11/web3-eth-contract.html#methods-mymethod-send
     // use the "await" feature to wait for the function to finish execution
     // what is await? https://javascript.info/async-await
-    let sendTweet = await createTweet();
+    let sendTweet = await Twitter.methods.createTweet(content).send();
     // 7️⃣ Uncomment the displayTweets function! PRETTY EASY 🔥
     // GOAL: reload tweets after creating a new tweet
     // displayTweets(accounts[0]);
@@ -51,6 +51,7 @@ async function displayTweets(userAddress) {
   // 5️⃣ call the function getAllTweets from smart contract to get all the tweets
   // HINT: https://web3js.readthedocs.io/en/v1.2.11/web3-eth-contract.html#methods-mymethod-call
   // tempTweets = await YOUR CODE
+  tweets = await Twitter.methods.getAllTweets(userAddress).call();
 
   // we do this so we can sort the tweets  by timestamp
   const tweets = [...tempTweets];
