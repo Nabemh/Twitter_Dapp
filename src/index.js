@@ -41,21 +41,33 @@ async function createTweet(content) {
   }
 }
 
+// Ensure FontAwesome CDN is loaded dynamically
+(function loadFontAwesome() {
+  if (!document.querySelector('link[href*="font-awesome"]')) {
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href =
+      "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css";
+    document.head.appendChild(link);
+  }
+})();
+
 async function displayTweets(userAddress) {
   const tweetsContainer = document.getElementById("tweetsContainer");
   tweetsContainer.innerHTML = "";
   const tempTweets = await contract.methods.getAllTweets(userAddress).call();
-  // we do this so we can sort the tweets  by timestamp
-  const tweets = [...tempTweets];
-  tweets.sort((a, b) => b.timestamp - a.timestamp);
+
+  // Sort tweets by timestamp (latest first)
+  const tweets = [...tempTweets].sort((a, b) => b.timestamp - a.timestamp);
+
   for (let i = 0; i < tweets.length; i++) {
     const tweetElement = document.createElement("div");
     tweetElement.className = "tweet";
 
     const userIcon = document.createElement("img");
     userIcon.className = "user-icon";
-    userIcon.src = `https://avatars.dicebear.com/api/human/${tweets[i].author}.svg`;
-    userIcon.alt = "User Icon";
+    userIcon.src = `https://robohash.org/${tweets[i].author}.png`;
+    userIcon.alt = "User Avatar";
 
     tweetElement.appendChild(userIcon);
 
@@ -70,7 +82,7 @@ async function displayTweets(userAddress) {
     const likeButton = document.createElement("button");
     likeButton.className = "like-button";
     likeButton.innerHTML = `
-        <i class="far fa-heart"></i>
+        <i class="fa-regular fa-heart"></i>
         <span class="likes-count">${tweets[i].likes}</span>
     `;
     likeButton.setAttribute("data-id", tweets[i].id);
@@ -82,6 +94,7 @@ async function displayTweets(userAddress) {
       tweets[i].id,
       tweets[i].author
     );
+
     tweetInner.appendChild(likeButton);
     tweetElement.appendChild(tweetInner);
 
