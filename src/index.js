@@ -1,6 +1,6 @@
 import contractABI from "./abi.json";
 
-const contractAddress = "0x3d9b528BB366dc33Ba8d74fE806928f3B0f01B8d";
+const contractAddress = "0x6C52aADC71fd5B146BAb896CC29d8cc66E452a32";
 
 let web3 = new Web3(window.ethereum);
 let contract = new web3.eth.Contract(contractABI, contractAddress);
@@ -20,6 +20,10 @@ async function connectWallet() {
       });
 
     setConnected(accounts[0]);
+
+    if (accounts[0]) {
+      console.log("We have an account");
+    }
   } else {
     console.error("No web3 provider detected");
     document.getElementById("connectMessage").innerText =
@@ -39,9 +43,8 @@ async function createTweet(content) {
 
 async function displayTweets(userAddress) {
   const tweetsContainer = document.getElementById("tweetsContainer");
-  const tempTweets = [];
   tweetsContainer.innerHTML = "";
-  tempTweets = await contract.methods.getAllTweets(userAddress).call();
+  const tempTweets = await contract.methods.getAllTweets(userAddress).call();
   // we do this so we can sort the tweets  by timestamp
   const tweets = [...tempTweets];
   tweets.sort((a, b) => b.timestamp - a.timestamp);
@@ -107,7 +110,8 @@ function shortAddress(address, startLength = 6, endLength = 4) {
 
 async function likeTweet(author, id) {
   try {
-    await contract.methods.LikeTweet(author, id).send({ from: accounts[0] });
+    const accounts = await web3.eth.getAccounts();
+    await contract.methods.likeTweet(author, id).send({ from: accounts[0] });
   } catch (error) {
     console.error("User rejected request:", error);
   }
