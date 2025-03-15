@@ -123,7 +123,6 @@ function setConnected(address) {
   document.getElementById("connectMessage").style.display = "none";
   document.getElementById("tweetForm").style.display = "block";
   displayTweets(address);
-  showTweets();
 }
 
 document
